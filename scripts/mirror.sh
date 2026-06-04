@@ -25,8 +25,8 @@ log() { printf '==> %s\n' "$*"; }
 log "Fetching milestone index"
 mapfile -t VERSIONS < <(
   curl -fsSL "$BASE/" \
-    | grep -oE 'href="[0-9]+\.[0-9]+\.[0-9]+/"' \
-    | sed -E 's#href="([^/]+)/"#\1#' \
+    | grep -oE "href='/jdtls/milestones/[0-9]+\.[0-9]+\.[0-9]+'" \
+    | sed -E "s#.*/([0-9]+\.[0-9]+\.[0-9]+)'#\1#" \
     | sort -t. -k1,1n -k2,2n -k3,3n -u \
     | tail -n "$KEEP_LAST"
 )
