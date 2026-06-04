@@ -61,8 +61,10 @@ for ver in "${VERSIONS[@]}"; do
     && curl -fsSL -O "$dir/$fname" \
     && curl -fsSL -O "$dir/$fname.sha256" )
 
-  # Verify checksum (sha256 file: "<hash>  <filename>").
-  ( cd "$WORKDIR" && sha256sum -c "$fname.sha256" )
+  # The .sha256 file contains only the bare hash, so build a check line.
+  ( cd "$WORKDIR" \
+    && want="$(tr -d '[:space:]' < "$fname.sha256")" \
+    && echo "$want  $fname" | sha256sum -c - )
   log "checksum OK"
 
   gh release create "$ver" \
